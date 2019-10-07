@@ -21,6 +21,8 @@
 #include <stdio.h>
 #ifdef _WIN32
 #include <windows.h>
+#include <io.h>
+#include <fcntl.h>
 #else
 #include <termios.h>
 #include <unistd.h>
@@ -100,4 +102,21 @@ void clear_anykey(void)
 	tcflush(STDIN_FILENO, TCIFLUSH);
 	tcsetattr(STDIN_FILENO, TCSANOW, &term_orig);
 #endif
+}
+
+/* Disable newline translation on stdout when outputting binary data
+ */
+int setup_binary_stdout(void)
+{
+    int retval = 0;
+#ifdef _WIN32
+    int status = _setmode(_fileno(stdout), _O_BINARY);
+    if (status != -1) {
+        retval = 0;
+    } else {
+        g_critical("Failed to set binary stdout mode: errno=%d", errno);
+        retval = status;
+    }
+#endif
+    return retval;
 }

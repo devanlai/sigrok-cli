@@ -108,6 +108,9 @@ int parse_driver(char *arg, struct sr_dev_driver **driver, GSList **drvopts);
 void add_anykey(struct sr_session *session);
 void clear_anykey(void);
 
+/* TODO: should this live in a different file? */
+int setup_binary_stdout(void);
+
 /* options.c */
 extern gboolean opt_version;
 extern gboolean opt_list_supported;
